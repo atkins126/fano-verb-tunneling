@@ -15,10 +15,23 @@ uses
 
 type
 
-    TBootstrapApp = class(TSimpleScgiWebApplication)
+    TAppServiceProvider = class(TDaemonAppServiceProvider)
     protected
-        procedure buildDependencies(const container : IDependencyContainer); override;
-        procedure buildRoutes(const container : IDependencyContainer); override;
+        function buildDispatcher(
+            const ctnr : IDependencyContainer;
+            const routeMatcher : IRouteMatcher;
+            const config : IAppConfiguration
+        ) : IDispatcher; override;
+    public
+        procedure register(const container : IDependencyContainer); override;
+    end;
+
+    TAppRoutes = class(TRouteBuilder)
+    public
+        procedure buildRoutes(
+            const container : IDependencyContainer;
+            const router  : IRouter
+        ); override;
     end;
 
 implementation
@@ -29,22 +42,38 @@ uses
     (*! -------------------------------
      *   controllers factory
      *----------------------------------- *)
-    {---- put your controller factory here ---};
+    {---- put your controller factory here ---},
+    HomeControllerFactory,
+    DeleteControllerFactory;
 
+    function TAppServiceProvider.buildDispatcher(
+        const ctnr : IDependencyContainer;
+        const routeMatcher : IRouteMatcher;
+        const config : IAppConfiguration
+    ) : IDispatcher;
+    begin
+        ctnr.add(
+            GuidToString(IDispatcher),
+            TVerbTunnellingDispatcherFactory.create(
+                TSimpleDispatcherFactory.create(
+                    routeMatcher,
+                    TRequestResponseFactory.create()
+                )
+            )
+        );
+        result := ctnr[GuidToString(IDispatcher)] as IDispatcher;
+    end;
 
-    procedure TBootstrapApp.buildDependencies(const container : IDependencyContainer);
+    procedure TAppServiceProvider.register(const container : IDependencyContainer);
     begin
         {$INCLUDE Dependencies/dependencies.inc}
     end;
 
-    procedure TBootstrapApp.buildRoutes(const container : IDependencyContainer);
-    var router : IRouter;
+    procedure TAppRoutes.buildRoutes(
+        const container : IDependencyContainer;
+        const router : IRouter
+    );
     begin
-        router := container.get(GUIDToString(IRouter)) as IRouter;
-        try
-            {$INCLUDE Routes/routes.inc}
-        finally
-            router := nil;
-        end;
+        {$INCLUDE Routes/routes.inc}
     end;
 end.
