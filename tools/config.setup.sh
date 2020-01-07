@@ -10,8 +10,14 @@
 #------------------------------------------------------
 # Scripts to setup configuration files
 #------------------------------------------------------
+if [ -f config/config.json.sample ]; then
+    cp config/config.json.sample config/config.json
+fi
 
-cp config/config.json.sample config/config.json
+if [ -f config/config.ini.sample ]; then
+    cp config/config.ini.sample config/config.ini
+fi
+
 cp build.prod.cfg.sample build.prod.cfg
 cp build.dev.cfg.sample build.dev.cfg
 cp build.cfg.sample build.cfg
