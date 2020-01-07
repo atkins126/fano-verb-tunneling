@@ -1,6 +1,12 @@
-# Fano Web Framework Skeleton Application
+# HTTP Verb Tunneling Example Application
 
-Web application skeleton using Fano Framework, Pascal web application framework
+Web application skeleton using Fano Framework, Pascal web application framework.
+
+This web application demonstrates how to use HTTP verb tunneling (HTTP method override).
+
+Route `/delete` is set to accept `DELETE` method only, but this can be overriden by sending request with POST method and request header `X-HTTP-Method-Override` value is set to DELETE.
+
+HTTP method override is useful in situation where application is behind strict firewall rule which only allows GET or POST method. Please read [HTTP Verb Tunnelling](https://fanoframework.github.io/security/http-verb-tunnelling/) for more information.
 
 This project is generated using [Fano CLI](https://github.com/fanoframework/fano-cli)
 command line tools to help scaffolding web application using Fano Framework.
@@ -8,36 +14,19 @@ command line tools to help scaffolding web application using Fano Framework.
 ## Requirement
 
 - [Free Pascal](https://www.freepascal.org/) >= 3.0
-- [libcurl development](https://curl.haxx.se/libcurl/)
 - Web Server (Apache, nginx)
 - [Fano Web Framework](https://github.com/fanoframework/fano)
 
 ## Installation
 
-### Build
-
-#### libcurl development package installation
-
-Check if libcurl package for development is installed by running `curl-config`.
+### TLDR
 
 ```
-$ curl-config --version
+$ git clone https://github.com/fanofamework/fano-verb-tunneling.git --recursive
+$ cd fano-verb-tunneling
+$ ./tools/config.setup.sh
+$ ./build.sh
 ```
-If libcurl installed you will get something like `libcurl x.xx.x` where `x.xx.x` is version. For example `libcurl 7.47.0` otherwise you get
-
-```
-The program 'curl-config' can be found in the following packages:
- * libcurl4-gnutls-dev
- * libcurl4-nss-dev
- * libcurl4-openssl-dev
-Try: sudo apt install <selected package>
-```
-
-In case libcurl not installed, run
-```
-$ sudo apt install libcurl4-gnutls-dev
-```
-
 ### Free Pascal installation
 
 Make sure [Free Pascal](https://www.freepascal.org/) is installed. Run
@@ -48,7 +37,7 @@ If you see something like `Free Pascal Compiler version 3.0.4`,  you are good to
 
 Clone this repository
 
-    $ git clone git@github.com:fanofamework/fano-app.git --recursive
+    $ git clone https://github.com/fanofamework/fano-verb-tunneling.git --recursive
 
 `--recursive` is needed so git also pull [Fano](https://github.com/fanoframework/fano) repository.
 
